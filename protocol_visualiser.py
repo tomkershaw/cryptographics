@@ -22,6 +22,17 @@ def draw_clock(t, x, y, w, h):
     t.fillcolor("black")
     t.teleport(x+w/2, y)
 
+def draw_key(t, x, y, w, h):
+    t.fillcolor("#D0D0D0")
+    t.begin_fill()
+    t.teleport(x+w/2, y-h*3/4)
+    t.circle(h/4)
+    t.end_fill()
+    t.teleport(x+w/2, y-h/2)
+    t.write("KEY", align="center", font = ("Arial", 8, "bold"))
+    t.fillcolor("black")
+    t.teleport(x+w/2, y)
+
 def draw(t=None, element="agent", ornament="", text="", x=0, y=0, w=100, h=100):
     if not t:
         t=turtle.Turtle()
@@ -52,11 +63,13 @@ def draw(t=None, element="agent", ornament="", text="", x=0, y=0, w=100, h=100):
 
     if ornament == "clock":
         draw_clock(t, x, y, w, h)
+    elif ornament == "key":
+        draw_key(t, x, y, w, h)
 
 
 
 
-draw(t, element='agent', text="Alice", x=x+w/2, y=y, w=w, h=h)
+draw(t, element='agent', ornament="key", text="Alice", x=x+w/2, y=y, w=w, h=h)
 x += w
 draw(t, element='connection', w=w)
 x += w
