@@ -1,12 +1,15 @@
 import turtle
 t = turtle.Turtle()
 turtle.tracer(0)
-x = 0
-y = 0
+x = -200
+y = 200
 w = 50
 h = w
 r = h/2
 
+testing = True
+
+#TODO head and shoulders
 
 
 def draw_clock(t, x, y, w, h):
@@ -89,39 +92,51 @@ def draw(t=None, element="agent", ornament="", text="", x=0, y=0, w=100, h=100):
         draw_key(t, x, y, w, h)
 
 def process(protocol:str, x=0, y=0, w=50, h=50):
-    els = protocol.split()
-    for el in els:
-        eltype = el[0]
-        if len(el) > 1:
-            elorn = el[1]
-        else:
-            elorn = ""
-        match eltype:
-            case eltype if eltype in "ABCDE" and elorn == "k":
-                print("agent", eltype)
-                draw(t, element='agent', ornament="key", text=eltype, x=x+w/2, y=y, w=w, h=h)
-            case eltype if eltype in "ABCDE":
-                print("agent", eltype)
-                draw(t, element='agent', text=eltype, x=x+w/2, y=y, w=w, h=h)
-            case "-" if elorn == ">":
-                print("arrow")
-                draw(t, element='connection', ornament="arrow", w=w)
-            case "-":
-                print("line")
-                draw(t, element='connection', w=w)
-            case "#" if elorn == "n":
-                print("nonce")
-                draw(t, element='message', ornament="clock", text="a", x=x+w/2, y=y, w=w, h=h)
-            case "#" :
-                print("message")
-                draw(t, element='message', text="a", x=x+w/2, y=y, w=w, h=h)
-            case _:
-                print("?")
-        x += w
-    return {"els":els, "x":x, "y":y}
+    base_x = x
+    base_y = y
+    ans = []
+    lines = protocol.split("\n")
+    for j, line in enumerate(lines):
+        els = line.split(" ")
+        for i, el in enumerate(els):
+            eltype = el[0]
+            if len(el) > 1:
+                elorn = el[1]
+            else:
+                elorn = ""
+            match eltype:
+                case eltype if eltype in "ABCDE" and elorn == "k":
+                    print("agent", eltype, "X =", x)
+                    draw(t, element='agent', ornament="key", text=eltype, x=x+w/2, y=y, w=w, h=h)
+                case eltype if eltype in "ABCDE":
+                    print("agent", eltype, "X =", x)
+                    draw(t, element='agent', text=eltype, x=x+w/2, y=y, w=w, h=h)
+                case "-" if elorn == ">":
+                    print("arrow", "X =", x)
+                    draw(t, element='connection', ornament="arrow", w=w)
+                case "-":
+                    print("line", "X =", x)
+                    draw(t, element='connection', w=w)
+                case "#" if elorn == "n":
+                    print("nonce", "X =", x)
+                    draw(t, element='message', ornament="clock", text="a", x=x+w/2, y=y, w=w, h=h)
+                case "#":
+                    print("message", "X =", x)
+                    draw(t, element='message', text="a", x=x+w/2, y=y, w=w, h=h)
+                case _:
+                    print("?")
+            x = base_x + w * (i+1)
+            print("new X =", x)
+            
+        x = base_x
+        y = base_y - (h+10) * (j+1)
+        ans.append(els)
+    return {"ans":ans, "x":x, "y":y}
         
-assert process("A -> B")["els"] == ["A", "->", "B"]
-assert process("Ak - #n -> B", y=100)["els"] == ["Ak", "-", "#n", "->", "B"]
+if testing:
+    assert (ans := process("A -> B"))["ans"] == [["A", "->", "B"]], ans
+    assert (ans := process("Ak - #n -> B", y=-100))["ans"] == [["Ak", "-", "#n", "->", "B"]]
+    assert (ans := process("A -> B\nAk - #n -> B", y=-200))["ans"] == [["A", "->", "B"], ["Ak", "-", "#n", "->", "B"]]
 
 t.hideturtle()
 turtle.update()
