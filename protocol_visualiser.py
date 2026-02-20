@@ -22,16 +22,34 @@ def draw_clock(t, x, y, w, h):
     t.fillcolor("black")
     t.teleport(x+w/2, y)
 
-def draw_key(t, x, y, w, h):
+def draw_key(t:turtle.Turtle, x:float, y:float, w:float, h:float):
     t.fillcolor("#D0D0D0")
     t.begin_fill()
     t.teleport(x+w/2, y-h*3/4)
-    t.circle(h/4)
+    t.circle(h/4, 275)
+    t.seth(225)
+    t.fd(h/2)
+    t.lt(45)
+    t.fd(h/4)
+    t.lt(90)
+    t.fd(h/4)
+    t.lt(90)
+    t.fd(h/8)
+    t.rt(90)
+    t.fd(h/8)
+    t.lt(90)
+    t.fd(h/8)
+    t.rt(90)
+    t.fd(h/8)
+    t.lt(90)
+    t.fd(h/8)
+    t.rt(90)
+    t.fd(h/8)
     t.end_fill()
     t.teleport(x+w/2, y-h/2)
-    t.write("KEY", align="center", font = ("Arial", 8, "bold"))
     t.fillcolor("black")
     t.teleport(x+w/2, y)
+    t.seth(0)
 
 def draw(t=None, element="agent", ornament="", text="", x=0, y=0, w=100, h=100):
     if not t:
