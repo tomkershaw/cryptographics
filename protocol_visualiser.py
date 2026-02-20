@@ -1,10 +1,27 @@
 import turtle
 t = turtle.Turtle()
+turtle.tracer(0)
 x = 0
 y = 0
 w = 50
 h = w
 r = h/2
+
+def process(protocol:str):
+    els = protocol.split()
+    for el in els:
+        match el:
+            case foo if foo in "ABCDE":
+                print("agent", foo)
+            case "->":
+                print("arrow")
+            case "-":
+                print("line")
+            case _:
+                print("?")
+    return els
+        
+assert process("A -> B") == ["A", "->", "B"]
 
 def draw_clock(t, x, y, w, h):
     t.fillcolor("#D0D0D0")
@@ -98,4 +115,5 @@ x += w
 draw(t, element='agent', text="Bob", x=x+w/2, y=y, w=w, h=h)
 
 t.hideturtle()
+turtle.update()
 turtle.done()
