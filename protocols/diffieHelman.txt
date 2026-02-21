@@ -1,0 +1,22 @@
+ // https://lsv.ens-paris-saclay.fr/Software/spore/diffieHelman.txt
+ // Diffie Helman 
+  
+ A, B :           principal                        
+ P, G, Xa, Xb :   number                           
+ one :             -> number                       
+ kap :            number, number, number -> number 
+  
+  
+ 1.   A -> B  :   P, G                             
+ 2.   A -> B  :   kap(P, G, Xa)                    
+ 3.   B -> A  :   kap(P, G, Xb)                    
+ 4.   A -> B  :   {one()}kap(P, kap(P, G, Xb), Xa) 
+   
+ // Security Protocols Open Repository 
+ // http://www.lsv.ens-cachan.fr/spore 
+   
+-----------------------------------------------------------------------
+  
+   
+              This document was translated from LaTeX by HeVeA
+              (http://pauillac.inria.fr/~maranget/hevea/index.html). 
