@@ -127,7 +127,7 @@ def process(protocol:str, x=0, y=0, w=50, h=50):
                 case _:
                     print("?")
             x = t.pos()[0]
-        t.teleport(base_x+w*3/2, y+10)
+        t.teleport((x-base_x)/2, y+10)
         t.write(text, align="center")
         x = base_x
         y = base_y - (h+10) * (j+1)
