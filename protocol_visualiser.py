@@ -1,11 +1,17 @@
 import re
 import turtle
 import math
+# import ghostscript
+
+from PIL import Image
+from PIL import ImageGrab
 
 t = turtle.Turtle()
-turtle.tracer(0)
-x = -350
-y = 250
+t.hideturtle()
+turtle.tracer(5)
+turtle.setup(0.3, 0.85, 0, 0)
+x = -200
+y = 300
 w = 50
 h = w
 r = h/2
@@ -211,6 +217,7 @@ def draw_element(t=turtle.Turtle(), el="", x=0, y=0, w=100, h=100):
         elorn = el[1:]
     else:
         eltype = el
+    t.seth(0)
     match eltype:
         case "S":
             print("server", eltype, "X =", x)
@@ -223,6 +230,9 @@ def draw_element(t=turtle.Turtle(), el="", x=0, y=0, w=100, h=100):
             draw_key(t, text=elorn, x=x+w/2, y=y, w=w, h=h)
         case "N":
             print("nonce", "X =", x)
+            draw_message(t, elorn, x=x+w/2, y=y, w=w, h=h)
+        case "T":
+            print("timestamp", "X =", x)
             draw_message(t, elorn, x=x+w/2, y=y, w=w, h=h)
             draw_clock(t, x+w/2, y, w, h)
         case eltype if eltype in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
@@ -297,10 +307,18 @@ if __name__ == '__main__':
         # assert (ans := process("Ak - #a -> Bk\nBk - #a - #b -> Ak\nAk - #b -> Bk", x=x, y=y, w=w, h=h))["ans"] == [["Ak", "-", "#a", "->", "Bk"], ["Bk", "-", "#a", "-", "#b", "->", "Ak"], ["Ak", "-", "#b", "->", "Bk"]]
         # assert (ans := process("A -> S  :   A, {Ta, B, Kab}Kas\nS -> B  :   {Ts, A, Kab}Kbs", x=x, y=y, w=w, h=h))["ans"] == [["A", "->", "S"], ["S", "->", "B"]]
         # assert (ans := process("I -> B", x=x, y=y-300, w=w, h=h))["ans"] == [["I", "->", "B"]], ans
-        draw_lock(t, "Lock", 200, 200, 100, 100)
-        draw_lock(t, "Lock", 200, 50, 75, 75)
-        draw_lock(t, "Lock", 200, -50, 50, 50)
-        draw_lock(t, "Lock", 200, -100, 25, 25)
+        # draw_lock(t, "Lock", 200, 200, 100, 100)
+        # draw_lock(t, "Lock", 200, 50, 75, 75)
+        # draw_lock(t, "Lock", 200, -50, 50, 50)
+        # draw_lock(t, "Lock", 200, -100, 25, 25)
+
+        kerberos = '''
+ 1.   C -> A  :   U, G, L1, N1
+ 2.   A -> C  :   U, {U, C, G, Kcg, T1start, T1expire}Kag, {G, Kcg, T1start, T1expire}Ku
+ 3.   C -> G  :   S, L2, N2, {U, C, G, Kcg, T1start, T1expire}Kag, {C, T1}Kcg
+ 4.   G -> C  :   U, {U, C, S, Kcs, T2start, T2expire}Kgs, {S, Kcs, T2start, T2expire, N2}Kcg
+ 5.   C -> S  :   {U, C, S, Kcs, T2start, T2expire}Kgs, {C, T2}Kcs
+ 6.   S -> C  :   {T2}Kcs'''
 
         text = ''' 
         // Lowe's fixed version of Needham-Schroder Public Key 
@@ -332,6 +350,21 @@ if __name__ == '__main__':
         '''
 
         draw_stages(process(text), x, y, w, h)
+        
+        filepath = "C:/xampp/htdocs/cryptographics/output.ps"
+        t.screen.save(filepath, overwrite=True)
+        
+        # fails with ghostscript not found on paths message???
+        image = Image.open(filepath)
+        image.save("drawing.png")
+
+        # screenshot - this works but ugly resolution
+        x0, y0 = -300, -300
+        x1, y1 = 300, 300
+        ImageGrab.grab().crop((x0, y0, x1, y1)).save("screenshot.png")
+
+        draw_stages(process(kerberos), x, y, w, h)
+        
     else:
         lines = []
         done = False
